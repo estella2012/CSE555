@@ -78,7 +78,8 @@ class mnistNoisy(datasets.MNIST):
                 noisy_sample_index = np.random.choice(cls_idx, n_noisy, replace=False)
                 for idx in noisy_sample_index:
                     self.targets[idx] = t
-        if nosiy_rate > 0:
+            return
+        elif nosiy_rate > 0:
             n_samples = len(self.targets)
             n_noisy = int(nosiy_rate * n_samples)
             print("%d Noisy samples" % (n_noisy))
@@ -96,7 +97,7 @@ class mnistNoisy(datasets.MNIST):
             for i in range(10):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
-        return
+            return
 
 
 class cifar10Nosiy(datasets.CIFAR10):
