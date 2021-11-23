@@ -12,11 +12,12 @@ The code has been updated, now it should shows similar performance as in the pap
 ##### Arguments
 * --loss: 'SCE', 'CE'
 * --nr: 0.0 to 1.0 specify the nosie rate.
-* --dataset_type: 'cifar10' or 'cifar100'
+* --dataset_type: 'cifar10' or 'cifar100' or 'mnist'
 * --alpha: alpha for SCE
 * --beta: beta for SCE
 * --seed: random seed
 * --version: For experiment notes
+* --asym: using asymetric dataset
 
 Example for 0.4 Symmetric noise rate with SCE loss
 ```console
