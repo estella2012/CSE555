@@ -1,4 +1,5 @@
-## Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss 
+## Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss
+MNIST Added
 Kaidi Cao, Colin Wei, Adrien Gaidon, Nikos Arechiga, Tengyu Ma
 _________________
 
@@ -32,7 +33,11 @@ python cifar_train.py --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type CE --
 ```bash
 python cifar_train.py --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW
 ```
-
+-To train with MNIST dataset
+```bash
+pip install tensorboardX
+python drive/MyDrive/Colab/LDAM-DRW/cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
+```
 
 ### Reference
 
