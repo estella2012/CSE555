@@ -39,6 +39,12 @@ pip install tensorboardX
 python drive/MyDrive/Colab/LDAM-DRW/cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
+Result with MNIST dataset and epoch = 100:
+```bash
+val Results: Prec@1 86.660 Prec@5 99.299 Loss 2.26291
+val Class Accuracy: [0.915,0.998,0.782,0.808,0.724,0.429,0.664,0.583,0.361,0.240]
+Best Prec@1: 94.511
+```
 ### Reference
 
 If you find our paper and repo useful, please cite as
