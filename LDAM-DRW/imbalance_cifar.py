@@ -2,6 +2,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
+import tensorflow as tf
 
 class IMMNIST(torchvision.datasets.MNIST):
     cls_num = 10
@@ -47,7 +48,7 @@ class IMMNIST(torchvision.datasets.MNIST):
             new_data.append(self.data[selec_idx, ...])
             new_targets.extend([the_class, ] * the_img_num)
         new_data = np.vstack(new_data)
-        self.data = new_data
+        self.data = tf.convert_to_tensor(new_data)
         self.targets = new_targets
 
     def get_cls_num_list(self):
