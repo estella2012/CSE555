@@ -69,15 +69,18 @@ class mnistNoisy(datasets.MNIST):
         super(mnistNoisy, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)
         if asym:
-            # automobile < - truck, bird -> airplane, cat <-> dog, deer -> horse
-            source_class = [9, 2, 3, 5, 4]
-            target_class = [1, 0, 5, 3, 7]
+            source_class = [7, 2, 3, 5, 6]
+            target_class = [1, 7, 8, 6, 5]
             for s, t in zip(source_class, target_class):
                 cls_idx = np.where(np.array(self.targets) == s)[0]
                 n_noisy = int(nosiy_rate * cls_idx.shape[0])
                 noisy_sample_index = np.random.choice(cls_idx, n_noisy, replace=False)
                 for idx in noisy_sample_index:
                     self.targets[idx] = t
+            print("Print noisy label generation statistics:")
+            for i in range(10):
+                n_noisy = np.sum(np.array(self.targets) == i)
+                print("Noisy class %s, has %s samples." % (i, n_noisy))
             return
         elif nosiy_rate > 0:
             n_samples = len(self.targets)
