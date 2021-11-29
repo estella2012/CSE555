@@ -27,7 +27,6 @@ parser.add_argument('--loss', type=str, default='SCE', help='SCE, CE')
 parser.add_argument('--alpha', type=float, default=1.0, help='alpha scale')
 parser.add_argument('--beta', type=float, default=1.0, help='beta scale')
 parser.add_argument('--version', type=str, default='SCE0.0', help='Version')
-parser.add_argument('--dataset_type', choices=['cifar10', 'cifar100','mnist'], type=str, default='mnist')
 parser.add_argument('--asym', action='store_true', default=False)
 parser.add_argument('--seed', type=int, default=123)
 
@@ -206,24 +205,10 @@ def train():
                                numOfWorkers=args.data_nums_workers,
                                noise_rate=args.nr,
                                asym=args.asym,
-                               seed=args.seed,
-                               dataset_type=args.dataset_type)
+                               seed=args.seed,)
     dataLoader = dataset.getDataLoader()
-
-    if args.dataset_type == 'cifar100':
-        num_classes = 100
-        args.epoch = 150
-        fixed_cnn = ResNet34(num_classes=num_classes)
-    elif args.dataset_type == 'cifar10':
-        num_classes = 10
-        args.epoch = 120
-        fixed_cnn = SCEModel()
-    elif args.dataset_type == 'mnist':
-        num_classes = 10
-        args.epoch = 120
-        fixed_cnn = ResNet34(num_classes=num_classes)
-    else:
-        raise('Unimplemented')
+    num_classes = 10
+    fixed_cnn = ResNet34(num_classes=num_classes)
 
     if args.loss == 'SCE':
         criterion = SCELoss(alpha=args.alpha, beta=args.beta, num_classes=num_classes)
