@@ -1,6 +1,16 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
+class NormedLinear(nn.Module):
+
+    def __init__(self, in_features, out_features):
+        super(NormedLinear, self).__init__()
+        self.weight = Parameter(torch.Tensor(in_features, out_features))
+        self.weight.data.uniform_(-1, 1).renorm_(2, 1, 1e-5).mul_(1e5)
+
+    def forward(self, x):
+        out = F.normalize(x, dim=1).mm(F.normalize(self.weight, dim=0))
+        return out
 
 class ConvBrunch(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size=3):
@@ -35,7 +45,8 @@ class SCEModel(nn.Module):
             nn.Linear(3136, 256),
             nn.BatchNorm1d(256),
             nn.ReLU())
-        self.fc2 = nn.Linear(256, 10)
+        # self.fc2 = nn.Linear(256, 10)
+        self.fc2 = NormedLinear(256, 10)
 
     def forward(self, x):
         x = self.block1(x)
