@@ -10,10 +10,10 @@ python cifar_train.py --dataset noisymnist --gpu 0 --imb_type exp --imb_factor 0
 ```
 
 #### For 100 epochs:
-imbalance dataset
+Imbalance Dataset
 Best Prec@1: 77.64
 
-noisy Dataset
+Noisy Dataset
 Best Prec@1: 62.680
 
 ## Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss 
