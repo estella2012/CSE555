@@ -60,11 +60,6 @@ class mnistNoisy(datasets.MNIST):
                 noisy_sample_index = np.random.choice(cls_idx, n_noisy, replace=False)
                 for idx in noisy_sample_index:
                     self.targets[idx] = t
-            print("Print noisy label generation statistics:")
-            for i in range(10):
-                n_noisy = np.sum(np.array(self.targets) == i)
-                print("Noisy class %s, has %s samples." % (i, n_noisy))
-            return
         elif nosiy_rate > 0:
             n_samples = len(self.targets)
             n_noisy = int(nosiy_rate * n_samples)
@@ -79,13 +74,14 @@ class mnistNoisy(datasets.MNIST):
             for i in noisy_idx:
                 self.targets[i] = torch.tensor(other_class(n_classes=10, current_class=self.targets[i]))
             print(len(noisy_idx))
-            print("Print noisy label generation statistics:")
-            for i in range(10):
-                n_noisy = np.sum(np.array(self.targets) == i)
-                print("Noisy class %s, has %s samples." % (i, n_noisy))
-            return
+            
         img_num_list = self.get_img_num_per_cls(10, imb_type, imb_factor)
         self.gen_imbalanced_data(img_num_list)
+        print("Print noisy label generation statistics:")
+        for i in range(10):
+            n_noisy = np.sum(np.array(self.targets) == i)
+            print("Noisy class %s, has %s samples." % (i, n_noisy))
+        return
         
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
         img_max = len(self.data) / cls_num
