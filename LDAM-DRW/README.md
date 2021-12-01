@@ -4,7 +4,7 @@ To train with imbalanced dataset
 !python cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
-To train with noisy imbalanced dataset
+To train with noisy dataset
 ```bash
 python cifar_train.py --dataset noisymnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
 ```
@@ -13,7 +13,7 @@ python cifar_train.py --dataset noisymnist --gpu 0 --imb_type exp --imb_factor 0
 imbalance dataset
 Best Prec@1: 77.64
 
-noisy imbalanced Dataset
+noisy Dataset
 Best Prec@1: 62.680
 
 ## Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss 
