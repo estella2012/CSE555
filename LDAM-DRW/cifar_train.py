@@ -18,7 +18,7 @@ import models
 from tensorboardX import SummaryWriter
 from sklearn.metrics import confusion_matrix
 from utils import *
-from imbalance_cifar import IMMNIST, IMBALANCECIFAR10, IMBALANCECIFAR100
+from imbalance_cifar import IMMNIST, IMBALANCECIFAR10, IMBALANCECIFAR100, NOMNIST
 from losses import LDAMLoss, FocalLoss
 from tqdm import tqdm
 import tensorflow as tf
@@ -150,7 +150,13 @@ def main_worker(gpu, ngpus_per_node, args):
 
         train_dataset = IMMNIST(root='./data', rand_number=args.rand_number, train=True, download=True, transform=transform_train)
         val_dataset = datasets.MNIST(root='./data', train=False, download=True,transform=transform_val)
-    
+
+    elif args.dataset == 'noisymnist':
+
+        train_dataset = NOMNIST(root='./data', train=True, transform=transform_train, download=True, asym=False, nosiy_rate=0.4)
+
+        val_dataset = datasets.MNIST(root='./data', train=False, transform=transform_val, download=True)
+
     elif args.dataset == 'cifar10':
 
         transform_train = transforms.Compose([
