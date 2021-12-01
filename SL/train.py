@@ -28,6 +28,8 @@ parser.add_argument('--alpha', type=float, default=1.0, help='alpha scale')
 parser.add_argument('--beta', type=float, default=1.0, help='beta scale')
 parser.add_argument('--version', type=str, default='SCE0.0', help='Version')
 parser.add_argument('--asym', action='store_true', default=False)
+parser.add_argument('--imb_type', type=str, default='exp')
+parser.add_argument('--imb_factor', type=float, default=0.0)
 parser.add_argument('--seed', type=int, default=123)
 
 args = parser.parse_args()
@@ -205,6 +207,8 @@ def train():
                                numOfWorkers=args.data_nums_workers,
                                noise_rate=args.nr,
                                asym=args.asym,
+                               imb_type = args.imb_type,
+                               imb_factor = args.imb_factor,
                                seed=args.seed,)
     dataLoader = dataset.getDataLoader()
     num_classes = 10

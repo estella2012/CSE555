@@ -48,7 +48,7 @@ def other_class(n_classes, current_class):
     return other_class
 
 class mnistNoisy(datasets.MNIST):
-    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False):
+    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False, imb_type='exp', imb_factor=0.0):
         super(mnistNoisy, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)
         if asym:
@@ -84,10 +84,48 @@ class mnistNoisy(datasets.MNIST):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
             return
+        img_num_list = self.get_img_num_per_cls(10, imb_type, imb_factor)
+        self.gen_imbalanced_data(img_num_list)
+        
+    def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
+        img_max = len(self.data) / cls_num
+        img_num_per_cls = []
+        if imb_type == 'exp':
+            for cls_idx in range(cls_num):
+                num = img_max * (imb_factor**(cls_idx / (cls_num - 1.0)))
+                img_num_per_cls.append(int(num))
+        elif imb_type == 'step':
+            for cls_idx in range(cls_num // 2):
+                img_num_per_cls.append(int(img_max))
+            for cls_idx in range(cls_num // 2):
+                img_num_per_cls.append(int(img_max * imb_factor))
+        else:
+            img_num_per_cls.extend([int(img_max)] * cls_num)
+        return img_num_per_cls
+
+    def gen_imbalanced_data(self, img_num_per_cls):
+        #print(self.data)
+        new_data = []
+        new_targets = []
+        targets_np = np.array(self.targets, dtype=np.int64)
+        classes = np.unique(targets_np)
+        # np.random.shuffle(classes)
+        self.num_per_cls_dict = dict()
+        for the_class, the_img_num in zip(classes, img_num_per_cls):
+            self.num_per_cls_dict[the_class] = the_img_num
+            idx = np.where(targets_np == the_class)[0]
+            np.random.shuffle(idx)
+            selec_idx = idx[:the_img_num]
+            new_data.append(self.data[selec_idx, ...])
+            new_targets.extend([the_class, ] * the_img_num)
+        new_data = np.vstack(new_data)
+        # self.data = new_data
+        self.data = torch.tensor(new_data)
+        self.targets = new_targets
 
 class DatasetGenerator():
     def __init__(self, batchSize=128, eval_batch_size=256, dataPath='/datasets',
-                 seed=123, numOfWorkers=0, asym=False, cutout_length=16, noise_rate=0.4):
+                 seed=123, numOfWorkers=0, asym=False, cutout_length=16, noise_rate=0.4, imb_type='exp', imb_factor=0.0):
         self.seed = seed
         np.random.seed(seed)
         self.batchSize = batchSize
@@ -97,6 +135,8 @@ class DatasetGenerator():
         self.cutout_length = cutout_length
         self.noise_rate = noise_rate
         self.asym = asym
+        self.imb_type = imb_type
+        self.imb_factor = imb_factor
         self.data_loaders = self.loadData()
         return
 
@@ -116,7 +156,7 @@ class DatasetGenerator():
 
         train_dataset = mnistNoisy(root=self.dataPath, train=True,
                                         transform=train_transform, download=True,
-                                        asym=self.asym, nosiy_rate=self.noise_rate)
+                                        asym=self.asym, nosiy_rate=self.noise_rate, imb_type=self.imb_type, imb_factor=self.imb_factor)
 
         test_dataset = datasets.MNIST(root=self.dataPath, train=False,
                                         transform=test_transform, download=True)
