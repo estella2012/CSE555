@@ -151,12 +151,12 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.dataset == 'mnist':
 
-        train_dataset = IMMNIST(root='./data', imb_type=args.imb_type, rand_number=args.rand_number, train=True, download=True, transform=transform_train)
+        train_dataset = IMMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, rand_number=args.rand_number, train=True, download=True, transform=transform_train)
         val_dataset = datasets.MNIST(root='./data', train=False, download=True,transform=transform_val)
 
     elif args.dataset == 'noisymnist':
 
-        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=0.4)
+        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=0.4)
 
         val_dataset = datasets.MNIST(root='./data', train=False, transform=transform_val, download=True)
 
