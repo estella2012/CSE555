@@ -50,7 +50,9 @@ def other_class(n_classes, current_class):
 class mnistNoisy(datasets.MNIST):
     def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False, imb_type='exp', imb_factor=0.0):
         super(mnistNoisy, self).__init__(root, download=download, transform=transform,
-                                           target_transform=target_transform)
+                                           target_transform=target_transform)    
+        img_num_list = self.get_img_num_per_cls(10, imb_type, imb_factor)
+        self.gen_imbalanced_data(img_num_list)
         if asym:
             source_class = [7, 2, 3, 5, 6]
             target_class = [1, 7, 8, 6, 5]
@@ -74,9 +76,7 @@ class mnistNoisy(datasets.MNIST):
             for i in noisy_idx:
                 self.targets[i] = torch.tensor(other_class(n_classes=10, current_class=self.targets[i]))
             print(len(noisy_idx))
-            
-        img_num_list = self.get_img_num_per_cls(10, imb_type, imb_factor)
-        self.gen_imbalanced_data(img_num_list)
+        
         print("Print noisy label generation statistics:")
         for i in range(10):
             n_noisy = np.sum(np.array(self.targets) == i)
