@@ -70,6 +70,9 @@ parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
 parser.add_argument('--root_log',type=str, default='log')
 parser.add_argument('--root_model', type=str, default='checkpoint')
+parser.add_argument('--asym', default=False , help='asymmetrical')
+
+
 best_acc1 = 0
 
 
@@ -148,12 +151,12 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.dataset == 'mnist':
 
-        train_dataset = IMMNIST(root='./data', rand_number=args.rand_number, train=True, download=True, transform=transform_train)
+        train_dataset = IMMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, rand_number=args.rand_number, train=True, download=True, transform=transform_train)
         val_dataset = datasets.MNIST(root='./data', train=False, download=True,transform=transform_val)
 
     elif args.dataset == 'noisymnist':
 
-        train_dataset = NOMNIST(root='./data', train=True, transform=transform_train, download=True, asym=False, nosiy_rate=0.4)
+        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=0.4)
 
         val_dataset = datasets.MNIST(root='./data', train=False, transform=transform_val, download=True)
 
@@ -186,7 +189,6 @@ def main_worker(gpu, ngpus_per_node, args):
     args.cls_num_list = cls_num_list
     
     train_sampler = None
-    
     
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                                    batch_size=args.batch_size,
@@ -337,8 +339,6 @@ def validate(val_loader, model, criterion, epoch, args, log=None, tf_writer=None
     all_targets = []
     with torch.no_grad():
         end = time.time()
-        #for i, (input, target) in enumerate(train_loader):
-        #    print(enumerate(train_loader))
         for i, (input, target) in enumerate(val_loader):
             #print('11111')
             if args.gpu is not None:

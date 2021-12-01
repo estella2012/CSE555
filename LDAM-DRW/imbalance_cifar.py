@@ -30,6 +30,7 @@ class IMMNIST(torchvision.datasets.MNIST):
         np.random.seed(rand_number)
         img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type, imb_factor)
         self.gen_imbalanced_data(img_num_list)
+        print(len(self.data))
         
 
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
@@ -75,10 +76,12 @@ class IMMNIST(torchvision.datasets.MNIST):
 
 class NOMNIST(torchvision.datasets.MNIST):
     cls_num = 10
-    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False):
+    def __init__(self, root, imb_type='exp',imb_factor=0.01, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False):
         super(NOMNIST, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)
         if asym:
+            img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type, imb_factor)
+            self.gen_imbalanced_data(img_num_list)
             source_class = [7, 2, 3, 5, 6]
             target_class = [1, 7, 8, 6, 5]
             for s, t in zip(source_class, target_class):
@@ -92,10 +95,10 @@ class NOMNIST(torchvision.datasets.MNIST):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
             np.random.seed(0)
-            img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type = 'exp', imb_factor = 0.01)
-            self.gen_imbalanced_data(img_num_list)
 
         elif nosiy_rate > 0:
+            img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type, imb_factor)
+            self.gen_imbalanced_data(img_num_list)
             n_samples = len(self.targets)
             n_noisy = int(nosiy_rate * n_samples)
             print("%d Noisy samples" % (n_noisy))
@@ -114,9 +117,8 @@ class NOMNIST(torchvision.datasets.MNIST):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
             np.random.seed(0)
-            img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type = 'exp', imb_factor = 0.01)
-            self.gen_imbalanced_data(img_num_list)
-
+            
+            
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
         img_max = len(self.data) / cls_num
         img_num_per_cls = []

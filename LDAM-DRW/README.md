@@ -1,19 +1,19 @@
 #### Mnist Implementation
 To train with imbalanced dataset
 ```bash
-!python cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
+!python cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
 To train with noisy dataset
 ```bash
-python cifar_train.py --dataset noisymnist --gpu 0 --imb_type exp --imb_factor 0.01 --loss_type LDAM --train_rule DRW --epochs 100
+python cifar_train.py --dataset noisymnist --gpu 0 --imb_type none --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
 #### For 100 epochs:
-Imbalance Dataset
-Best Prec@1: 77.64
+Imbalance Dataset imb = exp
+Best Prec@1: 98.35
 
-Noisy Dataset
+Noisy Dataset noiserate = 0.4, sym
 Best Prec@1: 62.680
 
 ## Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss 
