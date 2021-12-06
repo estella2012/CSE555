@@ -70,7 +70,7 @@ parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
 parser.add_argument('--root_log',type=str, default='log')
 parser.add_argument('--root_model', type=str, default='checkpoint')
-parser.add_argument('--asym', default=False , help='asymmetrical')
+parser.add_argument('--asym', action='store_true', default = False , help='asymmetrical')
 parser.add_argument('--noise', default=0.0 , type = float, help='noise rate')
 
 
