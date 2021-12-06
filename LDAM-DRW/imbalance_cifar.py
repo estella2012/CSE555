@@ -114,11 +114,11 @@ class NOMNIST(torchvision.datasets.MNIST):
                 print("Class %d, number of noisy % d" % (d, len(noisy_class_index)))
             for i in noisy_idx:
                 self.targets[i] = torch.tensor(other_class(n_classes=10, current_class=self.targets[i]))
-        print("Print noisy label generation statistics:")
-        for i in range(10):
-            n_noisy = np.sum(np.array(self.targets) == i)
-            print("Noisy class %s, has %s samples." % (i, n_noisy))
-        np.random.seed(0)
+            print("Print noisy label generation statistics:")
+            for i in range(10):
+                n_noisy = np.sum(np.array(self.targets) == i)
+                print("Noisy class %s, has %s samples." % (i, n_noisy))
+            np.random.seed(0)
             
             
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
