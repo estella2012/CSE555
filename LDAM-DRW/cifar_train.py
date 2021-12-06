@@ -403,9 +403,9 @@ def adjust_learning_rate(optimizer, epoch, args):
     epoch = epoch + 1
     if epoch <= 5:
         lr = args.lr * epoch / 5
-    elif epoch > 30:
+    elif epoch > 20:
         lr = args.lr * 0.1
-    elif epoch > 40:
+    elif epoch > 30:
         lr = args.lr * 0.01
     else:
         lr = args.lr
