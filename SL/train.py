@@ -31,6 +31,7 @@ parser.add_argument('--asym', action='store_true', default=False)
 parser.add_argument('--imb_type', type=str, default='exp')
 parser.add_argument('--imb_factor', type=float, default=0.0)
 parser.add_argument('--seed', type=int, default=123)
+parser.add_argument('--ldam', action='store_true', default=False)
 
 args = parser.parse_args()
 GLOBAL_STEP, EVAL_STEP, EVAL_BEST_ACC, EVAL_BEST_ACC_TOP5 = 0, 0, 0, 0
@@ -212,7 +213,7 @@ def train():
                                seed=args.seed,)
     dataLoader = dataset.getDataLoader()
     num_classes = 10
-    fixed_cnn = ResNet34(num_classes=num_classes)
+    fixed_cnn = ResNet34(num_classes=num_classes, LDAM = args.ldam)
 
     if args.loss == 'SCE':
         criterion = SCELoss(alpha=args.alpha, beta=args.beta, num_classes=num_classes)
