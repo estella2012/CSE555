@@ -19,7 +19,7 @@ from tensorboardX import SummaryWriter
 from sklearn.metrics import confusion_matrix
 from utils import *
 from imbalance_cifar import IMMNIST, IMBALANCECIFAR10, IMBALANCECIFAR100, NOMNIST
-from losses import LDAMLoss, FocalLoss
+from losses import LDAMLoss, FocalLoss, SCELoss
 from tqdm import tqdm
 import tensorflow as tf
 
@@ -72,6 +72,8 @@ parser.add_argument('--root_log',type=str, default='log')
 parser.add_argument('--root_model', type=str, default='checkpoint')
 parser.add_argument('--asym', action='store_true', default = False , help='asymmetrical')
 parser.add_argument('--noise', default=0.0 , type = float, help='noise rate')
+parser.add_argument('--alpha', default=0.1 , type = float, help='alpha for SCE loss')
+parser.add_argument('--beta', default=1.0 , type = float, help='beta for SCE loss')
 
 
 best_acc1 = 0
@@ -240,6 +242,8 @@ def main_worker(gpu, ngpus_per_node, args):
             criterion = nn.CrossEntropyLoss(weight=per_cls_weights).cuda(args.gpu)
         elif args.loss_type == 'LDAM':
             criterion = LDAMLoss(cls_num_list=cls_num_list, max_m=0.5, s=30, weight=per_cls_weights).cuda(args.gpu)
+        elif args.loss_type == 'SCE':
+            criterion = LDAMLoss(alpha=args.alpha, beta=args.beta, num_classes=num_classes, weight=per_cls_weights).cuda(args.gpu)
         elif args.loss_type == 'Focal':
             criterion = FocalLoss(weight=per_cls_weights, gamma=1).cuda(args.gpu)
         else:
