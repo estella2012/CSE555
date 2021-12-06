@@ -63,19 +63,16 @@ class mnistNoisy(datasets.MNIST):
                 for idx in noisy_sample_index:
                     self.targets[idx] = t
         elif nosiy_rate > 0:
-            n_samples = len(self.targets)
-            n_noisy = int(nosiy_rate * n_samples)
-            print("%d Noisy samples" % (n_noisy))
             class_index = [np.where(np.array(self.targets) == i)[0] for i in range(10)]
-            class_noisy = int(n_noisy / 10)
             noisy_idx = []
             for d in range(10):
+                class_noisy = int(nosiy_rate * len(class_index[d]))
                 noisy_class_index = np.random.choice(class_index[d], class_noisy, replace=False)
                 noisy_idx.extend(noisy_class_index)
                 print("Class %d, number of noisy % d" % (d, len(noisy_class_index)))
             for i in noisy_idx:
                 self.targets[i] = torch.tensor(other_class(n_classes=10, current_class=self.targets[i]))
-            print(len(noisy_idx))
+            print("%d Noisy samples" % len(noisy_idx))
         
         print("Print noisy label generation statistics:")
         for i in range(10):
