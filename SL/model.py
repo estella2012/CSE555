@@ -128,7 +128,7 @@ class ResNet(nn.Module):
         if LDAM:
             self.linear = NormedLinear(512*block.expansion, num_classes)
         else:
-            self.linear = nn.Linearx(512*block.expansion, num_classes)
+            self.linear = nn.Linear(512*block.expansion, num_classes)
 
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1]*(num_blocks-1)
