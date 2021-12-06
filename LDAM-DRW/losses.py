@@ -45,13 +45,13 @@ class LDAMLoss(nn.Module):
         return F.cross_entropy(self.s*output, target, weight=self.weight)
 
 class SCELoss(nn.Module):
-    def __init__(self, alpha, beta, num_classes=10):
+    def __init__(self, alpha, beta, num_classes=10, weight=None):
         super(SCELoss, self).__init__()
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.alpha = alpha
         self.beta = beta
         self.num_classes = num_classes
-        self.cross_entropy = nn.CrossEntropyLoss()
+        self.cross_entropy = nn.CrossEntropyLoss(weight)
 
     def forward(self, pred, labels):
         # CCE
