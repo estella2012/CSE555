@@ -243,7 +243,7 @@ def main_worker(gpu, ngpus_per_node, args):
         elif args.loss_type == 'LDAM':
             criterion = LDAMLoss(cls_num_list=cls_num_list, max_m=0.5, s=30, weight=per_cls_weights).cuda(args.gpu)
         elif args.loss_type == 'SCE':
-            criterion = LDAMLoss(alpha=args.alpha, beta=args.beta, num_classes=num_classes, weight=per_cls_weights).cuda(args.gpu)
+            criterion = SCELoss(alpha=args.alpha, beta=args.beta, num_classes=num_classes, weight=per_cls_weights).cuda(args.gpu)
         elif args.loss_type == 'Focal':
             criterion = FocalLoss(weight=per_cls_weights, gamma=1).cuda(args.gpu)
         else:
