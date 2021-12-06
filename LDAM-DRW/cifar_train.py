@@ -71,6 +71,7 @@ parser.add_argument('--gpu', default=None, type=int,
 parser.add_argument('--root_log',type=str, default='log')
 parser.add_argument('--root_model', type=str, default='checkpoint')
 parser.add_argument('--asym', default=False , help='asymmetrical')
+parser.add_argument('--noise', default=0.0 , type = float, help='noise rate')
 
 
 best_acc1 = 0
@@ -156,7 +157,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     elif args.dataset == 'noisymnist':
 
-        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=0.4)
+        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=args.noise)
 
         val_dataset = datasets.MNIST(root='./data', train=False, transform=transform_val, download=True)
 

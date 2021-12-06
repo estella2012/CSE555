@@ -80,6 +80,7 @@ class NOMNIST(torchvision.datasets.MNIST):
         super(NOMNIST, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)
         if asym:
+            print('Asym')
             img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type, imb_factor)
             self.gen_imbalanced_data(img_num_list)
             source_class = [7, 2, 3, 5, 6]
