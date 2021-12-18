@@ -18,7 +18,7 @@ import models
 from tensorboardX import SummaryWriter
 from sklearn.metrics import confusion_matrix
 from utils import *
-from imbalance_cifar import IMMNIST, IMBALANCECIFAR10, IMBALANCECIFAR100, NOMNIST
+from datageneration import IMMNIST, IMBALANCECIFAR10, IMBALANCECIFAR100, NOMNIST
 from losses import LDAMLoss, FocalLoss, SCELoss
 from tqdm import tqdm
 import tensorflow as tf
