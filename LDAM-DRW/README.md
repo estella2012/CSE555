@@ -1,12 +1,12 @@
 #### Mnist Implementation
 To train with imbalanced dataset
 ```bash
-!python cifar_train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
+!python train.py --dataset mnist --gpu 0 --imb_type exp --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
 To train with noisy dataset
 ```bash
-python cifar_train.py --dataset noisymnist --gpu 0 --imb_type none --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
+python train.py --dataset noisymnist --gpu 0 --imb_type none --imb_factor 0.5 --loss_type LDAM --train_rule DRW --epochs 100
 ```
 
 #### For 100 epochs:
