@@ -11,7 +11,7 @@ def other_class(n_classes, current_class):
     Returns a list of class indices excluding the class indexed by class_ind
     :param nb_classes: number of classes in the task
     :param class_ind: the class index to be omitted
-    :return: one random class that != class_ind
+    :return: one random class that != class_dind
     """
     if current_class < 0 or current_class >= n_classes:
         error_str = "class_ind must be within the range (0, nb_classes - 1)"
@@ -121,12 +121,21 @@ class NOMNIST(torchvision.datasets.MNIST):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
             np.random.seed(0)
-        
+
+        print("Print noisy label generation statistics:")
+        for i in range(10):
+            n_noisy = np.sum(np.array(self.targets) == i)
+            print("Noisy class %s, has %s samples." % (i, n_noisy))
+
         if SVM:
             estimator = SVC(C=5, gamma=0.001, kernel="rbf", class_weight="balanced")
             classifier = OneVsRestClassifier(estimator)
             classifier.fit(self.data, self.targets)
             self.targets = classifier.predict(self.data)
+            print("Print noisy label generation statistics:")
+            for i in range(10):
+                n_noisy = np.sum(np.array(self.targets) == i)
+                print("Noisy class %s, has %s samples." % (i, n_noisy))
             
             
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):
