@@ -14,6 +14,7 @@
 import matplotlib.pyplot as plt
 from sklearn import datasets, metrics
 from sklearn.svm import SVC
+from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import validation_curve
 from sklearn.model_selection import KFold
@@ -26,6 +27,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import dataset
 
 
 # ## Digits dataset
@@ -42,13 +44,14 @@ import pandas as pd
 # In[ ]:
 
 
-digits = datasets.load_digits()
-
-_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
-for ax, image, label in zip(axes, digits.images, digits.target):
-    ax.set_axis_off()
-    ax.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
-    ax.set_title('Training: %i' % label)
+#digits = datasets.load_digits()
+#type(mnist)
+X, y = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+#_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
+#for ax, image, label in zip(axes, digits.images, digits.target):
+  #  ax.set_axis_off()
+  #  ax.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
+  #  ax.set_title('Training: %i' % label)
 
 
 # ## Classification
@@ -76,11 +79,12 @@ for ax, image, label in zip(axes, digits.images, digits.target):
 
 # In[ ]:
 
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.14, random_state=0)
 
-
-n_samples = len(digits.images)
-data = digits.images.reshape((n_samples, -1))
-X_train, X_test, y_train, y_test = train_test_split(data, digits.target, test_size=0.14, shuffle=False)
+#n_samples = len(digits.images)
+#data = digits.images.reshape((n_samples, -1))
+#X_train, X_test, y_train, y_test = train_test_split(data, digits.target, test_size=0.14, shuffle=False)
 
 
 # creating a KFold object with 5 splits 
@@ -244,3 +248,30 @@ plt.figure()
 plot_confusion_matrix(cnf_matrix , classes=class_names, title='Confusion matrix')
 plt.show()
 
+dataset = DatasetGenerator(batchSize=args.batch_size,
+                               dataPath=args.data_path,
+                               numOfWorkers=args.data_nums_workers,
+                               noise_rate=args.nr,
+                               asym=args.asym,
+                               imb_type = args.imb_type,
+                               imb_factor = args.imb_factor,
+                               seed=args.seed,)
+dataLoader = dataset.getDataLoader()
+for images, labels in tqdm(data_loader["train_dataset"]):
+        start = time.time()
+        images, labels = images.to(device), labels.to(device)
+
+for images, labels in tqdm(data_loader["test_dataset"]):
+        start = time.time()
+        images_test, labels_test = images.to(device), labels.to(device)
+
+estimator = SVC(C=5, gamma=0.001, kernel="rbf", class_weight="balanced")
+classifier = OneVsRestClassifier(estimator)
+classifier.fit(images, labels)
+
+y_pred = classifier.predict(images_test)
+
+# metrics
+print("accuracy", metrics.accuracy_score(labels_test, y_pred), "\n")
+print(metrics.confusion_matrix(labels_test, y_pred), "\n")
+cnf_matrix = metrics.confusion_matrix(labels_test, y_pred)
