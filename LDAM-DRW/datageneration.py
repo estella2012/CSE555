@@ -3,6 +3,8 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 import tensorflow as tf
+from sklearn.svm import SVC
+from sklearn.multiclass import OneVsRestClassifier
 
 def other_class(n_classes, current_class):
     """
@@ -76,7 +78,7 @@ class IMMNIST(torchvision.datasets.MNIST):
 
 class NOMNIST(torchvision.datasets.MNIST):
     cls_num = 10
-    def __init__(self, root, imb_type='exp',imb_factor=0.01, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False):
+    def __init__(self, root, imb_type='exp',imb_factor=0.01, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False, SVM=False):
         super(NOMNIST, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)
         if asym:
@@ -119,6 +121,12 @@ class NOMNIST(torchvision.datasets.MNIST):
                 n_noisy = np.sum(np.array(self.targets) == i)
                 print("Noisy class %s, has %s samples." % (i, n_noisy))
             np.random.seed(0)
+        
+        if SVM:
+            estimator = SVC(C=5, gamma=0.001, kernel="rbf", class_weight="balanced")
+            classifier = OneVsRestClassifier(estimator)
+            classifier.fit(self.data, self.targets)
+            self.targets = classifier.predict(self.data)
             
             
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):

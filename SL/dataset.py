@@ -3,6 +3,8 @@ from torch.utils.data import DataLoader
 import torch
 import numpy as np
 from numpy.testing import assert_array_almost_equal
+from sklearn.svm import SVC
+from sklearn.multiclass import OneVsRestClassifier
 
 np.random.seed(15)
 
@@ -48,7 +50,7 @@ def other_class(n_classes, current_class):
     return other_class
 
 class mnistNoisy(datasets.MNIST):
-    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False, imb_type='exp', imb_factor=0.0):
+    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, nosiy_rate=0.0, asym=False, imb_type='exp', imb_factor=0.0, SVM = False):
         super(mnistNoisy, self).__init__(root, download=download, transform=transform,
                                            target_transform=target_transform)    
         img_num_list = self.get_img_num_per_cls(10, imb_type, imb_factor)
@@ -78,6 +80,13 @@ class mnistNoisy(datasets.MNIST):
         for i in range(10):
             n_noisy = np.sum(np.array(self.targets) == i)
             print("Noisy class %s, has %s samples." % (i, n_noisy))
+        
+        if SVM:
+            estimator = SVC(C=5, gamma=0.001, kernel="rbf", class_weight="balanced")
+            classifier = OneVsRestClassifier(estimator)
+            classifier.fit(self.data, self.targets)
+            self.targets = classifier.predict(self.data)
+
         return
         
     def get_img_num_per_cls(self, cls_num, imb_type, imb_factor):

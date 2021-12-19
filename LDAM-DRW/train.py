@@ -74,7 +74,7 @@ parser.add_argument('--asym', action='store_true', default = False , help='asymm
 parser.add_argument('--noise', default=0.0 , type = float, help='noise rate')
 parser.add_argument('--alpha', default=0.1 , type = float, help='alpha for SCE loss')
 parser.add_argument('--beta', default=1.0 , type = float, help='beta for SCE loss')
-
+parser.add_argument('--SVM', action='store_true', default=False)
 
 best_acc1 = 0
 
@@ -159,7 +159,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     elif args.dataset == 'noisymnist':
 
-        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=args.noise)
+        train_dataset = NOMNIST(root='./data', imb_type=args.imb_type, imb_factor=args.imb_factor, train=True, transform=transform_train, download=True, asym = args.asym, nosiy_rate=args.noise, SVM = args.SVM)
 
         val_dataset = datasets.MNIST(root='./data', train=False, transform=transform_val, download=True)
 
